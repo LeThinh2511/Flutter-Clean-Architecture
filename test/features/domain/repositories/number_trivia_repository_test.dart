@@ -26,7 +26,7 @@ void main() {
           .thenAnswer((_) async => Right(tNumberTrivia));
 
       // Trigger
-      final result = await usecase.execute(tNumber);
+      final result = await usecase(Params(tNumber));
 
       // UseCase should simply return the fake response
       expect(result, Right(tNumberTrivia));
