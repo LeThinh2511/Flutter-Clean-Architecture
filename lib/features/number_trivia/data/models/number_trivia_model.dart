@@ -6,4 +6,11 @@ class NumberTriviaModel extends NumberTrivia {
   factory NumberTriviaModel.fromJson(Map<String, dynamic> json) {
     return NumberTriviaModel(json['text'], json['number']);
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'text': text,
+      'number': number,
+    };
+  }
 }
