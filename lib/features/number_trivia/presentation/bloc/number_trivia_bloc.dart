@@ -19,10 +19,9 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
   final GetRandomNumberTrivia getRandomNumberTrivia;
   final InputConverter inputConverter;
 
-  NumberTriviaBloc(
-      {required this.getConcreteNumberTrivia,
-      required this.getRandomNumberTrivia,
-      required this.inputConverter})
+  NumberTriviaBloc(this.getConcreteNumberTrivia,
+      this.getRandomNumberTrivia,
+      this.inputConverter)
       : super(Empty());
 
   NumberTriviaState get initialState => Empty();
