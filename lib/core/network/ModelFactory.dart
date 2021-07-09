@@ -1,0 +1,1 @@
+typedef ModelFactory<T> = T Function();

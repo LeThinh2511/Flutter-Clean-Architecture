@@ -11,7 +11,7 @@ class NumberTriviaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Number Trivia'),
+        title: const Text('Number Trivia'),
       ),
       body: buildBody(context)
     );
@@ -19,24 +19,24 @@ class NumberTriviaPage extends StatelessWidget {
 
   BlocProvider<NumberTriviaBloc> buildBody(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<NumberTriviaBloc>(),
+      create: (_) => serviceLocator<NumberTriviaBloc>(),
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
             children: <Widget>[
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               // Top half
-              Container(
+              SizedBox(
                 // Third of the size of the screen
                 height: MediaQuery.of(context).size.height / 3,
                 // Message Text widgets / CircularLoadingIndicator
                 child: BlocBuilder<NumberTriviaBloc, NumberTriviaState>(
                   builder: (context, state) {
                     if (state is Empty) {
-                      return MessageDisplay(message: 'Start searching!');
+                      return const MessageDisplay(message: 'Start searching!');
                     } else if (state is Loading) {
-                      return LoadingWidget();
+                      return const LoadingWidget();
                     } else if (state is Error) {
                       return MessageDisplay(message: state.message);
                     } else if (state is Loaded) {
@@ -44,15 +44,15 @@ class NumberTriviaPage extends StatelessWidget {
                         numberTrivia: state.trivia,
                       );
                     } else {
-                      return Placeholder();
+                      return const Placeholder();
                     }
                     // We're going to also check for the other states
                   },
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Bottom half
-              TriviaControls()
+              const TriviaControls()
             ],
           ),
         ),
@@ -62,23 +62,23 @@ class NumberTriviaPage extends StatelessWidget {
 }
 
 class MessageDisplay extends StatelessWidget {
-  final String message;
-
   const MessageDisplay({
     Key? key,
     required this.message,
   }): super(key: key);
 
+  final String message;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       // Third of the size of the screen
       height: MediaQuery.of(context).size.height / 3,
       child: Center(
         child: SingleChildScrollView(
           child: Text(
             message,
-            style: TextStyle(fontSize: 25),
+            style: const TextStyle(fontSize: 25),
             textAlign: TextAlign.center,
           ),
         ),
@@ -94,9 +94,9 @@ class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height / 3,
-      child: Center(
+      child: const Center(
         child: CircularProgressIndicator(),
       ),
     );
@@ -104,23 +104,23 @@ class LoadingWidget extends StatelessWidget {
 }
 
 class TriviaDisplay extends StatelessWidget {
-  final NumberTrivia numberTrivia;
-
   const TriviaDisplay({
     Key? key,
     required this.numberTrivia,
   }) : super(key: key);
 
+  final NumberTrivia numberTrivia;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height / 3,
       child: Column(
         children: <Widget>[
           // Fixed size, doesn't scroll
           Text(
             numberTrivia.number.toString(),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 50,
               fontWeight: FontWeight.bold,
             ),
@@ -132,7 +132,7 @@ class TriviaDisplay extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Text(
                   numberTrivia.text,
-                  style: TextStyle(fontSize: 25),
+                  style: const TextStyle(fontSize: 25),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -164,7 +164,7 @@ class _TriviaControlsState extends State<TriviaControls> {
         TextField(
           controller: controller,
           keyboardType: TextInputType.number,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             hintText: 'Input a number',
           ),
@@ -175,21 +175,21 @@ class _TriviaControlsState extends State<TriviaControls> {
             dispatchConcrete();
           },
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Row(
           children: <Widget>[
             Expanded(
               child: RaisedButton(
-                child: Text('Search'),
+                child: const Text('Search'),
                 color: Theme.of(context).accentColor,
                 textTheme: ButtonTextTheme.primary,
                 onPressed: dispatchConcrete,
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Expanded(
               child: RaisedButton(
-                child: Text('Get random trivia'),
+                child: const Text('Get random trivia'),
                 onPressed: dispatchRandom,
               ),
             ),

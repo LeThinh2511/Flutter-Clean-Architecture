@@ -1,13 +1,34 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_clean_architecture/core/util/default_equatable.dart';
 
-abstract class Failure extends Equatable with DefaultEquatable {
-  // If the subclasses have some properties, they'll get passed to this constructor
-  // so that Equatable can perform value comparison.
-  Failure([List properties = const <dynamic>[]]): super();
+abstract class Failure extends Equatable with DefaultFailure {
+  late final String message;
+  late final String domain;
 }
 
-// General failures
-class ServerFailure extends Failure {}
+class DefaultFailure {
+  final String message = 'Unexpected Error';
+  final String domain = 'error.unknown';
 
-class CacheFailure extends Failure {}
+  List<Object?> get props => [domain];
+}
+
+class ServerFailure extends Failure {
+  ServerFailure({String? message, String code = 'unknown'}) {
+    this.code = code;
+    if (message != null) {
+      this.message = message;
+    }
+    domain = 'error.server.$code';
+  }
+
+  late final String code;
+}
+
+class CacheFailure extends Failure {
+  CacheFailure({String? message, String domain = 'unknown'}) {
+    if (message != null) {
+      this.message = message;
+    }
+    this.domain = 'error.cache.$domain';
+  }
+}

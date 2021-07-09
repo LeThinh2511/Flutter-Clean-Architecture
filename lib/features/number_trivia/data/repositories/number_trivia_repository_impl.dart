@@ -8,7 +8,7 @@ import 'package:flutter_clean_architecture/features/number_trivia/data/models/nu
 import 'package:flutter_clean_architecture/features/number_trivia/domain/entities/number_trivia.dart';
 import 'package:flutter_clean_architecture/features/number_trivia/domain/repositories/number_trivia_repository.dart';
 
-typedef GetRemoteNumberTrivia = Future<NumberTriviaModel>Function();
+typedef GetRemoteNumberTrivia = Future<Either<Failure, NumberTriviaModel>>Function();
 
 class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   final NumberTriviaRemoteDataSource remoteDataSource;
@@ -24,15 +24,15 @@ class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   @override
   Future<Either<Failure, NumberTrivia>> getConcreteNumberTrivia(
       int number,
-      ) async {
-    return await _getTrivia(() {
+      ) {
+    return _getTrivia(() {
       return remoteDataSource.getConcreteNumberTrivia(number);
     });
   }
 
   @override
-  Future<Either<Failure, NumberTrivia>> getRandomNumberTrivia() async {
-    return await _getTrivia(() {
+  Future<Either<Failure, NumberTrivia>> getRandomNumberTrivia() {
+    return _getTrivia(() {
       return remoteDataSource.getRandomNumberTrivia();
     });
   }
@@ -42,19 +42,19 @@ class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
       ) async {
     if (await networkInfo.isConnected) {
       try {
-        final remoteTrivia = await getRemoteNumberTrivia();
-        localDataSource.cacheNumberTrivia(remoteTrivia);
-        return Right(remoteTrivia);
+        final result = await getRemoteNumberTrivia();
+        result.fold((failure) {
+          return Left(failure);
+        }, (remoteTrivia) {
+          localDataSource.cacheNumberTrivia(remoteTrivia);
+          return Right(remoteTrivia);
+        });
+        return Left(ServerFailure());
       } on ServerException {
         return Left(ServerFailure());
       }
     } else {
-      try {
-        final localTrivia = await localDataSource.getLastNumberTrivia();
-        return Right(localTrivia);
-      } on CacheException {
-        return Left(CacheFailure());
-      }
+        return localDataSource.getLastNumberTrivia();
     }
   }
 }

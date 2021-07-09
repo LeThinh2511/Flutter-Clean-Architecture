@@ -15,14 +15,14 @@ const String INVALID_INPUT_FAILURE_MESSAGE =
     'Invalid Input - The number must be a positive integer or zero.';
 
 class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
-  final GetConcreteNumberTrivia getConcreteNumberTrivia;
-  final GetRandomNumberTrivia getRandomNumberTrivia;
-  final InputConverter inputConverter;
-
   NumberTriviaBloc(this.getConcreteNumberTrivia,
       this.getRandomNumberTrivia,
       this.inputConverter)
       : super(Empty());
+
+  final GetConcreteNumberTrivia getConcreteNumberTrivia;
+  final GetRandomNumberTrivia getRandomNumberTrivia;
+  final InputConverter inputConverter;
 
   NumberTriviaState get initialState => Empty();
 

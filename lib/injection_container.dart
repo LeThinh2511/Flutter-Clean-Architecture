@@ -1,7 +1,6 @@
-import 'package:flutter_clean_architecture/features/number_trivia/presentation/bloc/number_trivia_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+import 'core/network/network_client.dart';
 import 'core/network/network_info.dart';
 import 'features/number_trivia/data/datasources/number_trivia_local_data_source.dart';
 import 'features/number_trivia/data/datasources/number_trivia_remote_data_source.dart';
@@ -9,41 +8,42 @@ import 'features/number_trivia/data/repositories/number_trivia_repository_impl.d
 import 'features/number_trivia/domain/repositories/number_trivia_repository.dart';
 import 'features/number_trivia/domain/usecases/get_concrete_number_trivia.dart';
 import 'features/number_trivia/domain/usecases/get_random_number_trivia.dart';
+import 'features/number_trivia/presentation/bloc/number_trivia_bloc.dart';
 import 'features/number_trivia/presentation/util/input_converter.dart';
 
-final sl = GetIt.instance;
+final serviceLocator = GetIt.instance;
 
 Future<void> init() async {
   //! Features - Number Trivia
   //Bloc
-  sl.registerFactory<NumberTriviaBloc>(
-          () => NumberTriviaBloc(sl(), sl(), sl())
+  serviceLocator.registerFactory<NumberTriviaBloc>(
+          () => NumberTriviaBloc(serviceLocator(), serviceLocator(), serviceLocator())
   );
 
   // Use cases
-  sl.registerLazySingleton(() => GetConcreteNumberTrivia(sl()));
-  sl.registerLazySingleton(() => GetRandomNumberTrivia(sl()));
+  serviceLocator.registerLazySingleton(() => GetConcreteNumberTrivia(serviceLocator()));
+  serviceLocator.registerLazySingleton(() => GetRandomNumberTrivia(serviceLocator()));
 
   // Repository
-  sl.registerLazySingleton<NumberTriviaRepository>(
-      () => NumberTriviaRepositoryImpl(sl(), sl(), sl()));
+  serviceLocator.registerLazySingleton<NumberTriviaRepository>(
+      () => NumberTriviaRepositoryImpl(serviceLocator(), serviceLocator(), serviceLocator()));
 
   // Data sources
-  sl.registerLazySingleton<NumberTriviaRemoteDataSource>(
-        () => NumberTriviaRemoteDataSourceImpl(sl()),
+  serviceLocator.registerLazySingleton<NumberTriviaRemoteDataSource>(
+        () => NumberTriviaRemoteDataSourceImpl(client: serviceLocator()),
   );
 
-  sl.registerLazySingleton<NumberTriviaLocalDataSource>(
-        () => NumberTriviaLocalDataSourceImpl(sl()),
+  serviceLocator.registerLazySingleton<NumberTriviaLocalDataSource>(
+        () => NumberTriviaLocalDataSourceImpl(serviceLocator()),
   );
 
-  sl.registerLazySingleton(() => InputConverter());
+  serviceLocator.registerLazySingleton(() => InputConverter());
 
   //! Core
-  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
+  serviceLocator.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
 
   //! External
   final sharedPreferences = await SharedPreferences.getInstance();
-  sl.registerLazySingleton(() => sharedPreferences);
-  sl.registerLazySingleton(() => http.Client());
+  serviceLocator.registerLazySingleton(() => sharedPreferences);
+  serviceLocator.registerLazySingleton(() => NetworkClientImpl());
 }

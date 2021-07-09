@@ -19,19 +19,19 @@ void main() {
     usecase = GetRandomNumberTrivia(mockNumberTriviaRepository);
   });
 
-  final tNumberTrivia = NumberTrivia(1, 'test');
+  const tNumberTrivia = NumberTrivia(1, 'test');
 
   test(
     'should get trivia from the repository',
         () async {
       // arrange
       when(mockNumberTriviaRepository.getRandomNumberTrivia())
-          .thenAnswer((_) async => Right(tNumberTrivia));
+          .thenAnswer((_) async => const Right(tNumberTrivia));
       // act
       // Since random number doesn't require any parameters, we pass in NoParams.
       final result = await usecase(NoParams());
       // assert
-      expect(result, Right(tNumberTrivia));
+      expect(result, const Right(tNumberTrivia));
       verify(mockNumberTriviaRepository.getRandomNumberTrivia());
       verifyNoMoreInteractions(mockNumberTriviaRepository);
     },

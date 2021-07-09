@@ -17,19 +17,19 @@ void main() {
     usecase = GetConcreteNumberTrivia(mockNumberTriviaRepository);
   });
 
-  final tNumber = 1;
-  final tNumberTrivia = NumberTrivia(1, "test");
+  const tNumber = 1;
+  const tNumberTrivia = NumberTrivia(1, 'test');
 
   test('should get trivia for the number from the repository', () async {
       // Fake the response
       when(mockNumberTriviaRepository.getConcreteNumberTrivia(tNumber))
-          .thenAnswer((_) async => Right(tNumberTrivia));
+          .thenAnswer((_) async => const Right(tNumberTrivia));
 
       // Trigger
-      final result = await usecase(Params(tNumber));
+      final result = await usecase(const Params(tNumber));
 
       // UseCase should simply return the fake response
-      expect(result, Right(tNumberTrivia));
+      expect(result, const Right(tNumberTrivia));
 
       // Verify that the method has been called on the Repository
       verify(mockNumberTriviaRepository.getConcreteNumberTrivia(tNumber));

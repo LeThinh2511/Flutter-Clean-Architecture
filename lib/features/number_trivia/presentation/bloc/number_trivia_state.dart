@@ -14,13 +14,13 @@ class Empty extends NumberTriviaState {}
 class Loading extends NumberTriviaState {}
 
 class Loaded extends NumberTriviaState {
-  final NumberTrivia trivia;
-
   Loaded(this.trivia) : super([trivia]);
+
+  final NumberTrivia trivia;
 }
 
 class Error extends NumberTriviaState {
-  final String message;
-
   Error(this.message) : super([message]);
+
+  final String message;
 }
